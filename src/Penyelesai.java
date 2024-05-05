@@ -65,7 +65,10 @@ public class Penyelesai {
     public List<String> cariRuteUCS(String kataAsal, String kataTujuan) {
         // Buat priority queue berdasarkan harga tiap kata
         Queue<SimpulKata> antrian = new PriorityQueue<>(Comparator.comparingInt(SimpulKata -> SimpulKata.ambilHarga()));
+        // Buat set untuk menyimpan kata yang telah dikunjungi
         Set<String> kataDikunjungi = new HashSet<>();
+        // Inisialisasi jumlah kata yang dikunjungi
+        int jumlahKataDikunjungi = 0;
         // Tambahkan kata asal ke antrian
         antrian.offer(new SimpulKata(kataAsal, 0, null));
         // Eksplorasi setiap kata pada antrian sampai antrian kosong
@@ -75,8 +78,11 @@ public class Penyelesai {
             kataDikunjungi.add(kataSekarang.ambilKata());
             // Jika kata yang diambil merupakan kata tujuan
             if (kataSekarang.ambilKata().equals(kataTujuan)) {
-                // Kembalikan rute dari kata asal ke kata sekarang
-                return buatRute(kataSekarang);
+                // Cetak informasi dan kembalikan rute dari kata asal ke kata sekarang
+                List<String> rute = buatRute(kataSekarang);
+                System.out.println("Jumlah kata dikunjungi: " + jumlahKataDikunjungi);
+                System.out.println("Panjang rute: " + rute.size());
+                return rute;
             }
             // Cek setiap kata tetangga dari kata yang sedang diambil
             for (String kataTetangga : cariTetangga(kataSekarang.ambilKata())) {
@@ -85,6 +91,8 @@ public class Penyelesai {
                     // Tambah satu ke harga kata tersebut dan masukkan ke antrian sebagai simpul baru
                     int harga = kataSekarang.ambilHarga() + 1;
                     antrian.offer(new SimpulKata(kataTetangga, harga, kataSekarang));
+                    // Tambah jumlah kata yang dikunjungi
+                    jumlahKataDikunjungi++;
                 }
             }
         }
@@ -97,7 +105,10 @@ public class Penyelesai {
     public List<String> cariRuteGBFS (String kataAsal, String kataTujuan) {
         // Buat priority queue berdasarkan harga tiap kata
         Queue<SimpulKata> antrian = new PriorityQueue<>(Comparator.comparingInt(SimpulKata -> SimpulKata.ambilHarga()));
+        // Buat set untuk menyimpan kata yang telah dikunjungi
         Set<String> kataDikunjungi = new HashSet<>();
+        // Inisialisasi jumlah kata yang dikunjungi
+        int jumlahKataDikunjungi = 0;
         // Tambahkan kata asal ke antrian
         antrian.offer(new SimpulKata(kataAsal, hitunghn(kataAsal, kataTujuan), null));
         // Eksplorasi setiap kata pada antrian sampai antrian kosong
@@ -107,8 +118,11 @@ public class Penyelesai {
             kataDikunjungi.add(kataSekarang.ambilKata());
             // Jika kata yang diambil merupakan kata tujuan
             if (kataSekarang.ambilKata().equals(kataTujuan)) {
-                // Kembalikan rute dari kata asal ke kata sekarang
-                return buatRute(kataSekarang);
+                // Cetak informasi dan kembalikan rute dari kata asal ke kata sekarang
+                List<String> rute = buatRute(kataSekarang);
+                System.out.println("Jumlah kata dikunjungi: " + jumlahKataDikunjungi);
+                System.out.println("Panjang rute: " + rute.size());
+                return rute;
             }
             // Cek setiap kata tetangga dari kata yang sedang diambil
             for (String kataTetangga : cariTetangga(kataSekarang.ambilKata())) {
@@ -117,6 +131,8 @@ public class Penyelesai {
                     // Hitung heuristik h(n) kata tersebut dan masukkan ke antrian sebagai simpul baru
                     int harga = hitunghn(kataTetangga, kataTujuan);
                     antrian.offer(new SimpulKata(kataTetangga, harga, kataSekarang));
+                    // Tambah jumlah kata yang dikunjungi
+                    jumlahKataDikunjungi++;
                 }
             }
         }
@@ -129,7 +145,10 @@ public class Penyelesai {
     public List<String> cariRuteAStar (String kataAsal, String kataTujuan) {
         // Buat priority queue berdasarkan harga tiap kata
         Queue<SimpulKata> antrian = new PriorityQueue<>(Comparator.comparingInt(SimpulKata -> SimpulKata.ambilHarga()));
+        // Buat set untuk menyimpan kata yang telah dikunjungi
         Set<String> kataDikunjungi = new HashSet<>();
+        // Inisialisasi jumlah kata yang dikunjungi
+        int jumlahKataDikunjungi = 0;
         // Tambahkan kata asal ke antrian
         antrian.offer(new SimpulKata(kataAsal, hitunghn(kataAsal, kataTujuan), null));
         // Eksplorasi setiap kata pada antrian sampai antrian kosong
@@ -139,8 +158,11 @@ public class Penyelesai {
             kataDikunjungi.add(kataSekarang.ambilKata());
             // Jika kata yang diambil merupakan kata tujuan
             if (kataSekarang.ambilKata().equals(kataTujuan)) {
-                // Kembalikan rute dari kata asal ke kata sekarang
-                return buatRute(kataSekarang);
+                // Cetak informasi dan kembalikan rute dari kata asal ke kata sekarang
+                List<String> rute = buatRute(kataSekarang);
+                System.out.println("Jumlah kata dikunjungi: " + jumlahKataDikunjungi);
+                System.out.println("Panjang rute: " + rute.size());
+                return rute;
             }
             // Cek setiap kata tetangga dari kata yang sedang diambil
             for (String kataTetangga : cariTetangga(kataSekarang.ambilKata())) {
@@ -149,6 +171,8 @@ public class Penyelesai {
                     // Hitung harga kata tersebut (g(n) yang konstan bertambah 1 untuk setiap sisi ditambah h(n)) dan masukkan ke antrian sebagai simpul baru
                     int harga = hitunghn(kataTetangga, kataTujuan) + 1;
                     antrian.offer(new SimpulKata(kataTetangga, harga, kataSekarang));
+                    // Tambah jumlah kata yang dikunjungi
+                    jumlahKataDikunjungi++;
                 }
             }
         }
