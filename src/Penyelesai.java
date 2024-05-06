@@ -86,9 +86,9 @@ public class Penyelesai {
             }
             // Cek setiap kata tetangga dari kata yang sedang diambil
             for (String kataTetangga : cariTetangga(kataSekarang.ambilKata())) {
-                // Jika kata tetangga sudah dikunjungi
+                // Jika kata tetangga belum dikunjungi
                 if (!kataDikunjungi.contains(kataTetangga)) {
-                    // Tambah satu ke harga kata tersebut dan masukkan ke antrian sebagai simpul baru
+                    // Atur harga tersebut menjadi harga kata sekarang ditambah satu dan masukkan ke antrian sebagai simpul baru
                     int harga = kataSekarang.ambilHarga() + 1;
                     antrian.offer(new SimpulKata(kataTetangga, harga, kataSekarang));
                     // Tambah jumlah kata yang dikunjungi
@@ -126,7 +126,7 @@ public class Penyelesai {
             }
             // Cek setiap kata tetangga dari kata yang sedang diambil
             for (String kataTetangga : cariTetangga(kataSekarang.ambilKata())) {
-                // Jika kata tetangga sudah dikunjungi
+                // Jika kata tetangga belum dikunjungi
                 if (!kataDikunjungi.contains(kataTetangga)) {
                     // Hitung heuristik h(n) kata tersebut dan masukkan ke antrian sebagai simpul baru
                     int harga = hitunghn(kataTetangga, kataTujuan);
@@ -166,9 +166,9 @@ public class Penyelesai {
             }
             // Cek setiap kata tetangga dari kata yang sedang diambil
             for (String kataTetangga : cariTetangga(kataSekarang.ambilKata())) {
-                // Jika kata tetangga sudah dikunjungi
+                // Jika kata tetangga belum dikunjungi
                 if (!kataDikunjungi.contains(kataTetangga)) {
-                    // Hitung harga kata tersebut (g(n) yang konstan bertambah 1 untuk setiap sisi ditambah h(n)) dan masukkan ke antrian sebagai simpul baru
+                    // Hitung harga kata tersebut (g(n) yang bernilai g(n) kata sekarang ditambah satu, ditambah h(n)) dan masukkan ke antrian sebagai simpul baru
                     int harga = hitunghn(kataTetangga, kataTujuan) + 1;
                     antrian.offer(new SimpulKata(kataTetangga, harga, kataSekarang));
                     // Tambah jumlah kata yang dikunjungi
