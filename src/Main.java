@@ -24,15 +24,15 @@ public class Main {
         Penyelesai penyelesai = new Penyelesai(kamus);
         Scanner pemindai = new Scanner(System.in);
         System.out.println("Masukkan kata asal: ");
-        String kataAsal = pemindai.nextLine();
+        String kataAsal = pemindai.nextLine().toLowerCase();
         // Validasi kata asal
         while (!kamus.contains(kataAsal)) {
             System.out.println("Kata asal tidak ditemukan, masukkan kata yang valid!");
             System.out.println("Masukkan kata asal: ");
-            kataAsal = pemindai.nextLine();
+            kataAsal = pemindai.nextLine().toLowerCase();
         }
         System.out.println("Masukkan kata tujuan: ");
-        String kataTujuan = pemindai.nextLine();
+        String kataTujuan = pemindai.nextLine().toLowerCase();
         // Validasi kata tujuan
         while (!kamus.contains(kataTujuan) || kataAsal.length() != kataTujuan.length()) {
             if (!kamus.contains(kataTujuan)) {
@@ -42,7 +42,7 @@ public class Main {
                 System.out.println("Panjang kata tujuan berbeda dengan panjang kata asal!");
             }
             System.out.println("Masukkan kata tujuan: ");
-            kataTujuan = pemindai.nextLine();
+            kataTujuan = pemindai.nextLine().toLowerCase();
         }
         System.out.println("Pilih algoritma pencari rute (1/2/3):");
         System.out.println("1. Uniform Cost Search (UCS)");
