@@ -20,10 +20,11 @@ public class Main {
     public Main(Set<String> kamus) {
         this.kamus = kamus;
         frame = new JFrame("Word Ladder Solver");
-        frame.setSize(400, 400);
+        frame.setSize(400, 700);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new GridLayout(2, 1));
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(5, 2));
+        mainPanel.setLayout(new GridLayout(4, 2));
         JLabel kataAsalLabel = new JLabel("Kata Asal:");
         kataAsalField = new JTextField();
         kataAsalField.setPreferredSize(new Dimension(200, 20));
@@ -34,20 +35,28 @@ public class Main {
         String[] pilihanAlgoritma = {"Uniform Cost Search (UCS)", "Greedy Best First Search (GBFS)", "A Star (A*)"};
         algoritmaComboBox = new JComboBox<>(pilihanAlgoritma);
         algoritmaComboBox.setPreferredSize(new Dimension(200, 20));
-        JLabel infoLabel = new JLabel("Informasi:");
-        infoArea = new JTextArea();
-        infoArea.setLineWrap(true);
-        JScrollPane scrollPane = new JScrollPane(infoArea);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(300, 200));
         mainPanel.add(kataAsalLabel);
         mainPanel.add(kataAsalField);
         mainPanel.add(kataTujuanLabel);
         mainPanel.add(kataTujuanField);
         mainPanel.add(algoritmaLabel);
         mainPanel.add(algoritmaComboBox);
-        mainPanel.add(infoLabel);
-        mainPanel.add(scrollPane);
+
+        frame.add(mainPanel); // Tambahkan mainPanel ke frame
+
+        JPanel infoPanel = new JPanel(); // Buat panel baru untuk infoArea
+        infoPanel.setLayout(new BorderLayout()); // Gunakan BorderLayout agar infoArea dapat memenuhi seluruh ruang
+        JLabel infoLabel = new JLabel("Informasi:");
+        infoArea = new JTextArea();
+        infoArea.setLineWrap(true);
+        JScrollPane scrollPane = new JScrollPane(infoArea);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(300, 650)); // Tinggi diperbesar
+        infoPanel.add(infoLabel, BorderLayout.NORTH); // Tambahkan infoLabel ke bagian atas infoPanel
+        infoPanel.add(scrollPane, BorderLayout.CENTER); // Tambahkan scrollPane ke bagian tengah infoPanel
+
+        frame.add(infoPanel); // Tambahkan infoPanel ke frame
+
         JButton cariButton = new JButton("Cari Rute");
         cariButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
