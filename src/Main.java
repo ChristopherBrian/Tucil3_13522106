@@ -1,118 +1,154 @@
 // Import library
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.BufferedReader;
 
-// Kelas main
+// Kelas Main
 public class Main {
+    // Atribut kelas
+    private JFrame frame;
+    private JTextField kataAsalField;
+    private JTextField kataTujuanField;
+    private JComboBox<String> algoritmaComboBox;
+    private JTextArea infoArea;
+    private Set<String> kamus;
+
+    // Konstruktor
+    public Main(Set<String> kamus) {
+        this.kamus = kamus;
+        frame = new JFrame("Word Ladder Solver");
+        frame.setSize(400, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridLayout(5, 2));
+        JLabel kataAsalLabel = new JLabel("Kata Asal:");
+        kataAsalField = new JTextField();
+        kataAsalField.setPreferredSize(new Dimension(200, 20));
+        JLabel kataTujuanLabel = new JLabel("Kata Tujuan:");
+        kataTujuanField = new JTextField();
+        kataTujuanField.setPreferredSize(new Dimension(200, 20));
+        JLabel algoritmaLabel = new JLabel("Pilih Algoritma:");
+        String[] pilihanAlgoritma = {"Uniform Cost Search (UCS)", "Greedy Best First Search (GBFS)", "A Star (A*)"};
+        algoritmaComboBox = new JComboBox<>(pilihanAlgoritma);
+        algoritmaComboBox.setPreferredSize(new Dimension(200, 20));
+        JLabel infoLabel = new JLabel("Informasi:");
+        infoArea = new JTextArea();
+        infoArea.setLineWrap(true);
+        JScrollPane scrollPane = new JScrollPane(infoArea);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(300, 200));
+        mainPanel.add(kataAsalLabel);
+        mainPanel.add(kataAsalField);
+        mainPanel.add(kataTujuanLabel);
+        mainPanel.add(kataTujuanField);
+        mainPanel.add(algoritmaLabel);
+        mainPanel.add(algoritmaComboBox);
+        mainPanel.add(infoLabel);
+        mainPanel.add(scrollPane);
+        JButton cariButton = new JButton("Cari Rute");
+        cariButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Menerima input dari field
+                String kataAsal = kataAsalField.getText().trim().toLowerCase();
+                String kataTujuan = kataTujuanField.getText().trim().toLowerCase();
+                String algoritma = (String) algoritmaComboBox.getSelectedItem();
+
+                // Validasi kata asal dan kata tujuan
+                if (!kataValid(kataAsal) || !kataValid(kataTujuan)) {
+                    JOptionPane.showMessageDialog(frame, "Kata asal atau kata tujuan tidak valid!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Validasi panjang kata asal dan kata tujuan
+                if (kataAsal.length() != kataTujuan.length()) {
+                    JOptionPane.showMessageDialog(frame, "Panjang kata asal dan kata tujuan harus sama!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (kataValid(kataAsal) && kataValid(kataTujuan) && (kataAsal.length() == kataTujuan.length())) {
+                    Penyelesai penyelesai = new Penyelesai(kamus);
+                    // Pilihan algoritma UCS
+                    if (algoritma.equals("Uniform Cost Search (UCS)")) {
+                        Hasil hasil = penyelesai.cariRuteUCS(kataAsal, kataTujuan);
+                        showInfo(hasil);
+                    }
+                    // Pilihan algoritma GBFS
+                    else if (algoritma.equals("Greedy Best First Search (GBFS)")) {
+                        Hasil hasil = penyelesai.cariRuteGBFS(kataAsal, kataTujuan);
+                        showInfo(hasil);
+                    }
+                    // Pilihan algoritma A*
+                    else if (algoritma.equals("A Star (A*)")) {
+                        Hasil hasil = penyelesai.cariRuteAStar(kataAsal, kataTujuan);
+                        showInfo(hasil);
+                    }
+                }
+            }
+        });
+
+        mainPanel.add(cariButton);
+
+        frame.add(mainPanel);
+        frame.setVisible(true);
+    }
+
+    // Fungsi untuk mengeluarkan hasil di GUI
+    // Menerima parameter hasil
+    private void showInfo(Hasil hasil) {
+        // Jika rute ditemukan
+        if (hasil != null) {
+            // Mengeluarkan informasi pada GUI
+            java.util.List<String> rute = hasil.ambilRute();
+            int jumlahKataDikunjungi = hasil.ambilJumlahKataDikunjungi();
+            int panjangRute = rute.size() - 1;
+            long waktuEksekusi = hasil.ambilWaktuEksekusi();
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Jumlah kata dikunjungi: ").append(jumlahKataDikunjungi).append("\n");
+            sb.append("Panjang rute: ").append(panjangRute).append("\n");
+            sb.append("Waktu eksekusi: ").append(waktuEksekusi).append(" ms\n");
+            sb.append("Rute:\n");
+            for (String kata : rute) {
+                sb.append(kata).append("\n");
+            }
+
+            infoArea.setText(sb.toString());
+        }
+        // Jika rute tidak ditemukan
+        else {
+            infoArea.setText("Rute tidak ditemukan");
+        }
+    }
+
+    // Fungsi untuk mengecek validitas kata
+    // Menerima parameter kata dan mengembalikan boolean validitas kata
+    private boolean kataValid(String kata) {
+        return kamus.contains(kata);
+    }
+
+    // Fungsi main
     public static void main(String[] args) {
         Set<String> kamus = new HashSet<>();
         String lokasiFile = "kamus.txt";
         // Olah file kamus.txt menjadi kamus
-        try (BufferedReader pembaca = new BufferedReader(new FileReader(lokasiFile))) {
-            String kataKamus;
-            while ((kataKamus = pembaca.readLine()) != null) {
-                kamus.add(kataKamus.trim().toLowerCase());
+        try (Scanner scanner = new Scanner(new FileReader(lokasiFile))) {
+            while (scanner.hasNextLine()) {
+                String kataKamus = scanner.nextLine().trim().toLowerCase();
+                kamus.add(kataKamus);
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
-        // Input kata asal, kata tujuan, dan pilihan algoritma
-        Penyelesai penyelesai = new Penyelesai(kamus);
-        Scanner pemindai = new Scanner(System.in);
-        System.out.println("Masukkan kata asal: ");
-        String kataAsal = pemindai.nextLine().toLowerCase();
-        // Validasi kata asal
-        while (!kamus.contains(kataAsal)) {
-            System.out.println("Kata asal tidak ditemukan, masukkan kata yang valid!");
-            System.out.println("Masukkan kata asal: ");
-            kataAsal = pemindai.nextLine().toLowerCase();
-        }
-        System.out.println("Masukkan kata tujuan: ");
-        String kataTujuan = pemindai.nextLine().toLowerCase();
-        // Validasi kata tujuan
-        while (!kamus.contains(kataTujuan) || kataAsal.length() != kataTujuan.length()) {
-            if (!kamus.contains(kataTujuan)) {
-                System.out.println("Kata tujuan tidak ditemukan, masukkan kata yang valid!");
+
+        // Menjalankan GUI
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new Main(kamus);
             }
-            else {
-                System.out.println("Panjang kata tujuan berbeda dengan panjang kata asal!");
-            }
-            System.out.println("Masukkan kata tujuan: ");
-            kataTujuan = pemindai.nextLine().toLowerCase();
-        }
-        System.out.println("Pilih algoritma pencari rute (1/2/3):");
-        System.out.println("1. Uniform Cost Search (UCS)");
-        System.out.println("2. Greedy Best First Search (GBFS)");
-        System.out.println("3. A Star (A*)");
-        String algoritma = pemindai.nextLine();
-        // Validasi pilihan algoritma
-        while (!algoritma.equals("1") && !algoritma.equals("2") && !algoritma.equals("3")) {
-            System.out.println("Pilihan algoritma tidak valid!");
-            System.out.println("Pilih algoritma pencari rute (1/2/3):");
-            algoritma = pemindai.nextLine();
-        }
-        pemindai.close();
-        // Cari rute dari kata asal ke kata tujuan berdasarkan pilihan algoritma
-        // Jika memilih algoritma UCS
-        if (algoritma.equals("1")) {
-            long waktuMulai = System.currentTimeMillis();
-            List<String> listKata = penyelesai.cariRuteUCS(kataAsal, kataTujuan);
-            // Jika rute ditemukan
-            if (listKata != null) {
-                System.out.println("Rute dari kata asal " + kataAsal + " ke kata tujuan " + kataTujuan + ":");
-                for (String kata : listKata) {
-                    System.out.println(kata);
-                }
-            }
-            // Jika rute tidak ditemukan
-            else {
-                System.out.println("Rute tidak ditemukan");
-            }
-            long waktuSelesai = System.currentTimeMillis();
-            long waktuEksekusi = waktuSelesai - waktuMulai;
-            System.out.println("Waktu eksekusi: " + waktuEksekusi + " ms");
-        }
-        // Jika memilih algoritma GBFS
-        else if (algoritma.equals("2")) {
-            long waktuMulai = System.currentTimeMillis();
-            List<String> listKata = penyelesai.cariRuteGBFS(kataAsal, kataTujuan);
-            // Jika rute ditemukan
-            if (listKata != null) {
-                System.out.println("Rute dari kata asal " + kataAsal + " ke kata tujuan " + kataTujuan + ":");
-                for (String kata : listKata) {
-                    System.out.println(kata);
-                }
-            }
-            // Jika rute tidak ditemukan
-            else {
-                System.out.println("Rute tidak ditemukan");
-            }
-            long waktuSelesai = System.currentTimeMillis();
-            long waktuEksekusi = waktuSelesai - waktuMulai;
-            System.out.println("Waktu eksekusi: " + waktuEksekusi + " ms");
-        }
-        // Jika memilih algoritma A*
-        else if (algoritma.equals("3")) {
-            long waktuMulai = System.currentTimeMillis();
-            List<String> listKata = penyelesai.cariRuteAStar(kataAsal, kataTujuan);
-            // Jika rute ditemukan
-            if (listKata != null) {
-                System.out.println("Rute dari kata asal " + kataAsal + " ke kata tujuan " + kataTujuan + ":");
-                for (String kata : listKata) {
-                    System.out.println(kata);
-                }
-            }
-            // Jika rute tidak ditemukan
-            else {
-                System.out.println("Rute tidak ditemukan");
-            }
-            long waktuSelesai = System.currentTimeMillis();
-            long waktuEksekusi = waktuSelesai - waktuMulai;
-            System.out.println("Waktu eksekusi: " + waktuEksekusi + " ms");
-        }
+        });
     }
 }

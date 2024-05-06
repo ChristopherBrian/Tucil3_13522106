@@ -1,5 +1,6 @@
 // Import library
 import java.util.*;
+
 // Kelas Penyelesai
 public class Penyelesai {
     // Atribut kelas
@@ -61,14 +62,16 @@ public class Penyelesai {
     }
 
     // Fungsi untuk mencari rute dari kata asal ke kata tujuan menggunakan algoritma Uniform Cost Search (UCS)
-    // Menerima parameter kata asal dan kata tujuan serta mengembalikan rute ke kata tujuan yang dibentuk fungsi buatRute
-    public List<String> cariRuteUCS(String kataAsal, String kataTujuan) {
+    // Menerima parameter kata asal dan kata tujuan serta mengembalikan rute ke kata tujuan yang dibentuk fungsi buatRute dan jumlah kata dikunjungi
+    public Hasil cariRuteUCS(String kataAsal, String kataTujuan) {
         // Buat priority queue berdasarkan harga tiap kata
         Queue<SimpulKata> antrian = new PriorityQueue<>(Comparator.comparingInt(SimpulKata -> SimpulKata.ambilgn()));
         // Buat set untuk menyimpan kata yang telah dikunjungi
         Set<String> kataDikunjungi = new HashSet<>();
-        // Inisialisasi jumlah kata yang dikunjungi
+        // Inisialisasi jumlah kata dikunjungi
         int jumlahKataDikunjungi = 0;
+        // Mulai penghitungan waktu eksekusi
+        long waktuMulai = System.currentTimeMillis();
         // Tambahkan kata asal ke antrian
         antrian.offer(new SimpulKata(kataAsal, 0, 0, null));
         // Eksplorasi setiap kata pada antrian sampai antrian kosong
@@ -78,11 +81,12 @@ public class Penyelesai {
             kataDikunjungi.add(kataSekarang.ambilKata());
             // Jika kata yang diambil merupakan kata tujuan
             if (kataSekarang.ambilKata().equals(kataTujuan)) {
-                // Cetak informasi dan kembalikan rute dari kata asal ke kata sekarang
+                // Kembalikan rute dari kata asal ke kata sekarang, jumlah kata dikunjungi, dan waktu eksekusi
                 List<String> rute = buatRute(kataSekarang);
-                System.out.println("Jumlah kata dikunjungi: " + jumlahKataDikunjungi);
-                System.out.println("Panjang rute: " + rute.size());
-                return rute;
+                long waktuSelesai = System.currentTimeMillis();
+                long waktuEksekusi = waktuSelesai - waktuMulai;
+                Hasil hasil = new Hasil(rute, jumlahKataDikunjungi, waktuEksekusi);
+                return hasil;
             }
             // Cek setiap kata tetangga dari kata yang sedang diambil
             for (String kataTetangga : cariTetangga(kataSekarang.ambilKata())) {
@@ -101,14 +105,16 @@ public class Penyelesai {
     }
 
     // Fungsi untuk mencari rute dari kata asal ke kata tujuan menggunakan algoritma Greedy Best First Search (GBFS)
-    // Menerima parameter kata asal dan kata tujuan serta mengembalikan rute ke kata tujuan yang dibentuk fungsi buatRute
-    public List<String> cariRuteGBFS (String kataAsal, String kataTujuan) {
+    // Menerima parameter kata asal dan kata tujuan serta mengembalikan rute ke kata tujuan yang dibentuk fungsi buatRute dan jumlah kata dikunjungi
+    public Hasil cariRuteGBFS (String kataAsal, String kataTujuan) {
         // Buat priority queue berdasarkan harga tiap kata
         Queue<SimpulKata> antrian = new PriorityQueue<>(Comparator.comparingInt(SimpulKata -> SimpulKata.ambilhn()));
         // Buat set untuk menyimpan kata yang telah dikunjungi
         Set<String> kataDikunjungi = new HashSet<>();
-        // Inisialisasi jumlah kata yang dikunjungi
+        // Inisialisasi jumlah kata dikunjungi
         int jumlahKataDikunjungi = 0;
+        // Mulai penghitungan waktu eksekusi
+        long waktuMulai = System.currentTimeMillis();
         // Tambahkan kata asal ke antrian
         antrian.offer(new SimpulKata(kataAsal, 0, hitunghn(kataAsal, kataTujuan), null));
         // Eksplorasi setiap kata pada antrian sampai antrian kosong
@@ -118,11 +124,12 @@ public class Penyelesai {
             kataDikunjungi.add(kataSekarang.ambilKata());
             // Jika kata yang diambil merupakan kata tujuan
             if (kataSekarang.ambilKata().equals(kataTujuan)) {
-                // Cetak informasi dan kembalikan rute dari kata asal ke kata sekarang
+                // Kembalikan rute dari kata asal ke kata sekarang, jumlah kata dikunjungi, dan waktu eksekusi
                 List<String> rute = buatRute(kataSekarang);
-                System.out.println("Jumlah kata dikunjungi: " + jumlahKataDikunjungi);
-                System.out.println("Panjang rute: " + rute.size());
-                return rute;
+                long waktuSelesai = System.currentTimeMillis();
+                long waktuEksekusi = waktuSelesai - waktuMulai;
+                Hasil hasil = new Hasil(rute, jumlahKataDikunjungi, waktuEksekusi);
+                return hasil;
             }
             // Cek setiap kata tetangga dari kata yang sedang diambil
             for (String kataTetangga : cariTetangga(kataSekarang.ambilKata())) {
@@ -141,14 +148,16 @@ public class Penyelesai {
     }
 
     // Fungsi untuk mencari rute dari kata asal ke kata tujuan menggunakan algoritma A star (A*)
-    // Menerima parameter kata asal dan kata tujuan serta mengembalikan rute ke kata tujuan yang dibentuk fungsi buatRute
-    public List<String> cariRuteAStar (String kataAsal, String kataTujuan) {
+    // Menerima parameter kata asal dan kata tujuan serta mengembalikan rute ke kata tujuan yang dibentuk fungsi buatRute dan jumlah kata dikunjungi
+    public Hasil cariRuteAStar (String kataAsal, String kataTujuan) {
         // Buat priority queue berdasarkan harga tiap kata
         Queue<SimpulKata> antrian = new PriorityQueue<>(Comparator.comparingInt(SimpulKata -> (SimpulKata.ambilgn() + SimpulKata.ambilhn())));
         // Buat set untuk menyimpan kata yang telah dikunjungi
         Set<String> kataDikunjungi = new HashSet<>();
-        // Inisialisasi jumlah kata yang dikunjungi
+        // Inisialisasi jumlah kata dikunjungi
         int jumlahKataDikunjungi = 0;
+        // Mulai penghitungan waktu eksekusi
+        long waktuMulai = System.currentTimeMillis();
         // Tambahkan kata asal ke antrian
         antrian.offer(new SimpulKata(kataAsal, 0, hitunghn(kataAsal, kataTujuan), null));
         // Eksplorasi setiap kata pada antrian sampai antrian kosong
@@ -158,11 +167,12 @@ public class Penyelesai {
             kataDikunjungi.add(kataSekarang.ambilKata());
             // Jika kata yang diambil merupakan kata tujuan
             if (kataSekarang.ambilKata().equals(kataTujuan)) {
-                // Cetak informasi dan kembalikan rute dari kata asal ke kata sekarang
+                // Kembalikan rute dari kata asal ke kata sekarang, jumlah kata dikunjungi, dan waktu eksekusi
                 List<String> rute = buatRute(kataSekarang);
-                System.out.println("Jumlah kata dikunjungi: " + jumlahKataDikunjungi);
-                System.out.println("Panjang rute: " + rute.size());
-                return rute;
+                long waktuSelesai = System.currentTimeMillis();
+                long waktuEksekusi = waktuSelesai - waktuMulai;
+                Hasil hasil = new Hasil(rute, jumlahKataDikunjungi, waktuEksekusi);
+                return hasil;
             }
             // Cek setiap kata tetangga dari kata yang sedang diambil
             for (String kataTetangga : cariTetangga(kataSekarang.ambilKata())) {
