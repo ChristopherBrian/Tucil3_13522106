@@ -88,7 +88,7 @@ public class Penyelesai {
             for (String kataTetangga : cariTetangga(kataSekarang.ambilKata())) {
                 // Jika kata tetangga belum dikunjungi
                 if (!kataDikunjungi.contains(kataTetangga)) {
-                    // Atur harga tersebut menjadi harga kata sekarang ditambah satu dan masukkan ke antrian sebagai simpul baru
+                    // Atur harga kata tersebut menjadi harga kata sekarang ditambah satu dan masukkan ke antrian sebagai simpul baru
                     int harga = kataSekarang.ambilHarga() + 1;
                     antrian.offer(new SimpulKata(kataTetangga, harga, kataSekarang));
                     // Tambah jumlah kata yang dikunjungi
