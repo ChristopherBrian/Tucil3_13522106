@@ -1,0 +1,6 @@
+1. "one" -> "two"
+2. "east" -> "five"
+3. "wrong" -> "right"
+4. "greedy" -> "normal"
+5. "atlases" -> "cabaret"
+6. "engineer" -> "diameter"
