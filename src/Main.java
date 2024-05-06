@@ -41,22 +41,18 @@ public class Main {
         mainPanel.add(kataTujuanField);
         mainPanel.add(algoritmaLabel);
         mainPanel.add(algoritmaComboBox);
-
-        frame.add(mainPanel); // Tambahkan mainPanel ke frame
-
-        JPanel infoPanel = new JPanel(); // Buat panel baru untuk infoArea
-        infoPanel.setLayout(new BorderLayout()); // Gunakan BorderLayout agar infoArea dapat memenuhi seluruh ruang
+        frame.add(mainPanel);
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new BorderLayout());
         JLabel infoLabel = new JLabel("Informasi:");
         infoArea = new JTextArea();
         infoArea.setLineWrap(true);
         JScrollPane scrollPane = new JScrollPane(infoArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(300, 650)); // Tinggi diperbesar
-        infoPanel.add(infoLabel, BorderLayout.NORTH); // Tambahkan infoLabel ke bagian atas infoPanel
-        infoPanel.add(scrollPane, BorderLayout.CENTER); // Tambahkan scrollPane ke bagian tengah infoPanel
-
-        frame.add(infoPanel); // Tambahkan infoPanel ke frame
-
+        scrollPane.setPreferredSize(new Dimension(300, 650));
+        infoPanel.add(infoLabel, BorderLayout.NORTH);
+        infoPanel.add(scrollPane, BorderLayout.CENTER);
+        frame.add(infoPanel);
         JButton cariButton = new JButton("Cari Rute");
         cariButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -97,9 +93,7 @@ public class Main {
                 }
             }
         });
-
         mainPanel.add(cariButton);
-
         frame.add(mainPanel);
         frame.setVisible(true);
     }
@@ -123,7 +117,6 @@ public class Main {
             for (String kata : rute) {
                 sb.append(kata).append("\n");
             }
-
             infoArea.setText(sb.toString());
         }
         // Jika rute tidak ditemukan
@@ -152,7 +145,6 @@ public class Main {
             e.printStackTrace();
             System.exit(1);
         }
-
         // Menjalankan GUI
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
