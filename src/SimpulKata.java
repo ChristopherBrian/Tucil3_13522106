@@ -2,13 +2,15 @@
 public class SimpulKata {
     // Atribut kelas
     private String kata;
-    private int harga;
+    private int gn;
+    private int hn;
     private SimpulKata leluhur;
 
     // Konstruktor
-    public SimpulKata (String kata, int harga, SimpulKata leluhur) {
+    public SimpulKata (String kata, int gn, int hn, SimpulKata leluhur) {
         this.kata = kata;
-        this.harga = harga;
+        this.gn = gn;
+        this.hn = hn;
         this.leluhur = leluhur;
     }
 
@@ -17,16 +19,26 @@ public class SimpulKata {
         return this.kata;
     }
 
-    // Getter harga
-    public int ambilHarga() {
-        return this.harga;
+    // Getter g(n)
+    public int ambilgn() {
+        return this.gn;
     }
 
-    // Setter harga
-    public void aturHarga(int hargaBaru) {
-        this.harga = hargaBaru;
+    // Setter h(n)
+    public int ambilhn() {
+        return this.hn;
+    }
+
+    // Setter g(n)
+    public void aturgn(int gnBaru) {
+        this.gn = gnBaru;
     }
     
+    // Setter h(n)
+    public void aturhn(int hnBaru) {
+        this.hn = hnBaru;
+    }
+
     // Getter leluhur
     public SimpulKata getLeluhur() {
         return this.leluhur;

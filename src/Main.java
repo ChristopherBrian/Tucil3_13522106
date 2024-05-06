@@ -34,8 +34,13 @@ public class Main {
         System.out.println("Masukkan kata tujuan: ");
         String kataTujuan = pemindai.nextLine();
         // Validasi kata tujuan
-        while (!kamus.contains(kataTujuan)) {
-            System.out.println("Kata tujuan tidak ditemukan, masukkan kata yang valid!");
+        while (!kamus.contains(kataTujuan) || kataAsal.length() != kataTujuan.length()) {
+            if (!kamus.contains(kataTujuan)) {
+                System.out.println("Kata tujuan tidak ditemukan, masukkan kata yang valid!");
+            }
+            else {
+                System.out.println("Panjang kata tujuan berbeda dengan panjang kata asal!");
+            }
             System.out.println("Masukkan kata tujuan: ");
             kataTujuan = pemindai.nextLine();
         }
